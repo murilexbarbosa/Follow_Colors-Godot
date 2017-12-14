@@ -33,11 +33,33 @@ const PERDENDO = 2
 const GERANDO = 3
 const DEMONSTRANDO = 4
 
+signal perdeu
+
 func _ready():
 	randomize()
 	set_process(true)
-	timerGeraSequencia.start()
-
+	#timerGeraSequencia.start()
+	
+	gerasequecia()
+	
+	if estado == JOGANDO:
+		libera_botoes()
+	else:
+		bloqueia_botoes()
+			
+	set_process_input(true)
+	
+	
+	self.connect("perdeu",self,"perder")
+	print("ESTADO: "+str(estado))
+	
+func _process(delta):
+	gerasequecia()
+	
+	if estado == JOGANDO:
+		libera_botoes()
+	else:
+		bloqueia_botoes()	
 
 # FUNCOES PARA O CLIQUE DO BOTAO
 func _on_btnvermelho_pressed(): #0
@@ -45,6 +67,7 @@ func _on_btnvermelho_pressed(): #0
 		somvermelho.play()
 		sequenciaPlayer.append(0)
 		verificaResposta()
+		verificaFinal()
 		
 func _on_btnverde_pressed(): #1
 	if estado == JOGANDO:
@@ -125,8 +148,9 @@ func gerasequecia():
 		listaThread[rodada].start(self, "thread_playseq",sequenciaPC[rodada])
 		listaThread[rodada].wait_to_finish()
 		rodada +=1
-	else:
-		estado = JOGANDO
+		if rodada == sequenciaPC.size():
+			estado = JOGANDO 
+		
 	
 func _on_timerGeraSequencia_timeout():
 	bloqueia_botoes()
@@ -140,10 +164,15 @@ func thread_playseq(userdata):
 	playseq(userdata)
 	
 func verificaResposta():
-	for i in sequenciaPlayer.size():
-		if sequenciaPlayer[i] != sequenciaPC[i]:
-			pass #PERDEU
+	var tamanho = sequenciaPlayer.size() - 1
+	while tamanho >= 0:
+		if sequenciaPlayer[tamanho] != sequenciaPC[tamanho]:
+			emit_signal("perdeu")
+		tamanho -= 1
 
 func verificaFinal():
 	if sequenciaPlayer.size() == sequenciaPC.size():
-		pass #GANHOU
+		estado = GERANDO 
+		
+func perder():
+	print("perdeeuuuuU")
