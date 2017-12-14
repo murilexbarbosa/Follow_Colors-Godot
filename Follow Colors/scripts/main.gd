@@ -19,6 +19,7 @@ onready var timerGeraSequencia = get_node("timerGeraSequencia")
 
 var sequenciaPC = []
 var sequenciaPlayer = []
+var listaThread = []
 var rodada = 0
 var estado = 3
 var NumCorSequencia =0
@@ -30,6 +31,7 @@ var _thread
 const JOGANDO = 1
 const PERDENDO = 2
 const GERANDO = 3
+const DEMONSTRANDO = 4
 
 func _ready():
 	randomize()
@@ -38,14 +40,32 @@ func _ready():
 
 
 # FUNCOES PARA O CLIQUE DO BOTAO
-func _on_btnvermelho_pressed():
-	somvermelho.play()
-func _on_btnverde_pressed():
-	somverde.play()
-func _on_btnamarelo_pressed():
-	somamarelo.play()
-func _on_btnazul_pressed():
-	somazul.play()
+func _on_btnvermelho_pressed(): #0
+	if estado == JOGANDO:
+		somvermelho.play()
+		sequenciaPlayer.append(0)
+		verificaResposta()
+		
+func _on_btnverde_pressed(): #1
+	if estado == JOGANDO:
+		somverde.play()
+		sequenciaPlayer.append(1)
+		verificaResposta()
+		verificaFinal()
+		
+func _on_btnamarelo_pressed(): #2
+	if estado == JOGANDO:
+		somamarelo.play()
+		sequenciaPlayer.append(2)
+		verificaResposta()
+		verificaFinal()
+		
+func _on_btnazul_pressed(): #3
+	if estado == JOGANDO:
+		somazul.play()
+		sequenciaPlayer.append(3)
+		verificaResposta()
+		verificaFinal()
 ################################
 	
 func bloqueia_botoes():
@@ -90,30 +110,23 @@ func playseq(num):
 func gerasequecia():
 
 	if (estado == GERANDO):	
+		rodada = 0
+		sequenciaPlayer = []
 		sequenciaPC.append(int(rand_range(0,4)))
-		sequenciaPC.append(int(rand_range(0,4)))
-		sequenciaPC.append(int(rand_range(0,4)))
-		sequenciaPC.append(int(rand_range(0,4)))
-		
+
 		for NumCorSequencia in sequenciaPC:
 			print("NumCorSequencia:  "+str(NumCorSequencia))
 			ValorSequencia = NumCorSequencia
-			_thread = Thread.new()
-			#_thread.start(self, "thread_playseq",ValorSequencia)
-			_thread.wait_to_finish()
-
+			listaThread.append(Thread.new())
 			
-			#timerGeraSequencia.start()
-			#if ExecutandoTimer == true:
-			#	ValorSequencia = NumCorSequencia
-			
-			#playseq(ValorSequencia)
-		estado = JOGANDO
+		estado = DEMONSTRANDO
 		print("estado:  "+str(estado))
-	if ((estado == JOGANDO) and (rodada <= sequenciaPC.size())):
-		_thread.start(self, "thread_playseq",sequenciaPC[rodada])
+	if ((estado == DEMONSTRANDO) and (rodada < sequenciaPC.size())):
+		listaThread[rodada].start(self, "thread_playseq",sequenciaPC[rodada])
+		listaThread[rodada].wait_to_finish()
 		rodada +=1
-		
+	else:
+		estado = JOGANDO
 	
 func _on_timerGeraSequencia_timeout():
 	bloqueia_botoes()
@@ -125,3 +138,12 @@ func thread_playseq(userdata):
 	print("entrou thread")
 	print("valor :   " + str(userdata))
 	playseq(userdata)
+	
+func verificaResposta():
+	for i in sequenciaPlayer.size():
+		if sequenciaPlayer[i] != sequenciaPC[i]:
+			pass #PERDEU
+
+func verificaFinal():
+	if sequenciaPlayer.size() == sequenciaPC.size():
+		pass #GANHOU
