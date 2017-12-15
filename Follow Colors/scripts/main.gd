@@ -15,7 +15,7 @@ onready var animverde =  get_node("player/controle/AnimVerde")
 onready var animamarelo =  get_node("player/controle/AnimAmarelo")
 onready var animazul =  get_node("player/controle/AnimAzul")
 
-onready var timerGeraSequencia = get_node("timerGeraSequencia")
+onready var timerRestart = get_node("timerRestart")
 
 var sequenciaPC = []
 var sequenciaPlayer = []
@@ -44,8 +44,10 @@ func _ready():
 	self.connect("perdeu",self,"perder")
 	
 func _process(delta):
-	
-	tempoDelta = tempoDelta + delta
+	if estado == DEMONSTRANDO:
+		tempoDelta = tempoDelta + delta +0.1
+	else:
+		tempoDelta = tempoDelta + delta
 	
 	if tempoDelta > 3:
 		gerasequecia()
@@ -150,11 +152,6 @@ func gerasequecia():
 			estado = JOGANDO 
 		
 	
-func _on_timerGeraSequencia_timeout():
-	bloqueia_botoes()
-	gerasequecia()
-	set_process_input(true)
-	libera_botoes()	
 	
 func thread_playseq(userdata):
 	print("entrou thread")
@@ -165,12 +162,28 @@ func verificaResposta():
 	var tamanho = sequenciaPlayer.size() - 1
 	while tamanho >= 0:
 		if sequenciaPlayer[tamanho] != sequenciaPC[tamanho]:
-			emit_signal("perdeu")
+			emit_signal("perdeu",sequenciaPC[tamanho])
 		tamanho -= 1
 
 func verificaFinal():
 	if sequenciaPlayer.size() == sequenciaPC.size():
 		estado = GERANDO 
 		
-func perder():
+func perder(numCerto):
 	print("perdeeuuuuU")
+	bloqueia_botoes()
+	mostraRepostaCerta(numCerto)
+	timerRestart.start()
+	
+func mostraRepostaCerta(numCerto):
+	if numCerto == 0:
+		animvermelho.play("show_hide")
+	elif numCerto == 1:
+		animverde.play("show_hide")
+	elif numCerto == 2:
+		animamarelo.play("show_hide")
+	else:
+		animazul.play("show_hide")
+	
+func _on_timerRestart_timeout():
+	get_tree().reload_current_scene()

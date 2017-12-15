@@ -8,3 +8,5 @@ func _ready():
 func _on_play_released():
 	get_tree().change_scene_to(packed_scene)
 
+func _on_quit_released():
+	get_tree().quit()

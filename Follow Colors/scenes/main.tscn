@@ -299,7 +299,7 @@ transform/scale = Vector2( 0.447034, 0.500729 )
 texture = ExtResource( 13 )
 centered = false
 
-[node name="timerGeraSequencia" type="Timer" parent="."]
+[node name="timerRestart" type="Timer" parent="."]
 
 process_mode = 1
 wait_time = 2.0
@@ -314,6 +314,6 @@ autostart = false
 
 [connection signal="pressed" from="player/controle/btnazul" to="." method="_on_btnazul_pressed"]
 
-[connection signal="timeout" from="timerGeraSequencia" to="." method="_on_timerGeraSequencia_timeout"]
+[connection signal="timeout" from="timerRestart" to="." method="_on_timerRestart_timeout"]
 
 

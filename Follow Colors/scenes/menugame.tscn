@@ -69,6 +69,8 @@ passby_press = false
 action = ""
 visibility_mode = 0
 
+[connection signal="released" from="background/quit/quit" to="." method="_on_quit_released"]
+
 [connection signal="released" from="background/play/play" to="." method="_on_play_released"]
 
 
