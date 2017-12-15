@@ -27,6 +27,8 @@ var ValorSequencia
 var ExecutandoTimer = true
 var _thread
 
+var tempoDelta = 0
+
 
 const JOGANDO = 1
 const PERDENDO = 2
@@ -38,28 +40,24 @@ signal perdeu
 func _ready():
 	randomize()
 	set_process(true)
-	#timerGeraSequencia.start()
-	
-	gerasequecia()
-	
-	if estado == JOGANDO:
-		libera_botoes()
-	else:
-		bloqueia_botoes()
-			
 	set_process_input(true)
-	
-	
 	self.connect("perdeu",self,"perder")
-	print("ESTADO: "+str(estado))
 	
 func _process(delta):
-	gerasequecia()
 	
-	if estado == JOGANDO:
-		libera_botoes()
-	else:
-		bloqueia_botoes()	
+	tempoDelta = tempoDelta + delta
+	
+	if tempoDelta > 3:
+		gerasequecia()
+		
+		if estado == JOGANDO:
+			libera_botoes()
+		else:
+			bloqueia_botoes()
+			
+		print(str(delta))
+		tempoDelta = 0
+		#print("ESTADO: "+str(estado))
 
 # FUNCOES PARA O CLIQUE DO BOTAO
 func _on_btnvermelho_pressed(): #0
