@@ -44,22 +44,27 @@ func _ready():
 	self.connect("perdeu",self,"perder")
 	
 func _process(delta):
-	if estado == DEMONSTRANDO:
-		tempoDelta = tempoDelta + delta +0.1
-	else:
-		tempoDelta = tempoDelta + delta
-	
-	if tempoDelta > 3:
-		gerasequecia()
-		
-		if estado == JOGANDO:
-			libera_botoes()
+	#print("ESTADO: "+str(estado))
+	if estado != PERDENDO:
+		if estado == DEMONSTRANDO:
+			tempoDelta = tempoDelta + delta +0.1
 		else:
-			bloqueia_botoes()
+			tempoDelta = tempoDelta + delta
+		
+		if tempoDelta > 3:
+			gerasequecia()
 			
-		print(str(delta))
-		tempoDelta = 0
-		#print("ESTADO: "+str(estado))
+			if estado == JOGANDO:
+				libera_botoes()
+			else:
+				bloqueia_botoes()
+				
+			print(str(delta))
+			tempoDelta = 0
+			#print("ESTADO: "+str(estado))
+	else:
+		listaThread = []
+		sequenciaPC = []
 
 # FUNCOES PARA O CLIQUE DO BOTAO
 func _on_btnvermelho_pressed(): #0
@@ -120,15 +125,16 @@ func playazul(): #3
 
 
 func playseq(num):
-	print("playseq: "+str(num))
-	if num == 0:
-		playvermelho()
-	elif num == 1:
-		playverde()
-	elif num == 2:
-		playamarelo()
-	elif num == 3:
-		playazul()
+	#print("playseq: "+str(num))
+	if estado != PERDENDO:
+		if num == 0:
+			playvermelho()
+		elif num == 1:
+			playverde()
+		elif num == 2:
+			playamarelo()
+		elif num == 3:
+			playazul()
 
 func gerasequecia():
 
@@ -138,7 +144,7 @@ func gerasequecia():
 		sequenciaPC.append(int(rand_range(0,4)))
 
 		for NumCorSequencia in sequenciaPC:
-			print("NumCorSequencia:  "+str(NumCorSequencia))
+			#print("NumCorSequencia:  "+str(NumCorSequencia))
 			ValorSequencia = NumCorSequencia
 			listaThread.append(Thread.new())
 			
@@ -154,22 +160,24 @@ func gerasequecia():
 	
 	
 func thread_playseq(userdata):
-	print("entrou thread")
-	print("valor :   " + str(userdata))
+	#print("entrou thread")
+	#print("valor :   " + str(userdata))
 	playseq(userdata)
 	
 func verificaResposta():
 	var tamanho = sequenciaPlayer.size() - 1
 	while tamanho >= 0:
 		if sequenciaPlayer[tamanho] != sequenciaPC[tamanho]:
+			estado = PERDENDO
 			emit_signal("perdeu",sequenciaPC[tamanho])
 		tamanho -= 1
 
 func verificaFinal():
-	if sequenciaPlayer.size() == sequenciaPC.size():
+	if (sequenciaPlayer.size() == sequenciaPC.size()) and (estado != PERDENDO):
 		estado = GERANDO 
 		
 func perder(numCerto):
+	estado = PERDENDO
 	print("perdeeuuuuU")
 	bloqueia_botoes()
 	mostraRepostaCerta(numCerto)
