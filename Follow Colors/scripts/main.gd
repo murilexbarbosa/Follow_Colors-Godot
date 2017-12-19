@@ -17,7 +17,7 @@ onready var animazul =  get_node("player/controle/AnimAzul")
 
 onready var timerRestart = get_node("timerRestart")
 
-onready var barra = get_node("player/controle/Barra")
+onready var barra = get_node("Barra")
 
 var sequenciaPC = []
 var sequenciaPlayer = []
@@ -185,7 +185,9 @@ func perder(numCerto):
 	estado = PERDENDO
 	print("perdeeuuuuU")
 	bloqueia_botoes()
-	mostraRepostaCerta(numCerto)
+	if numCerto >= 0:
+		mostraRepostaCerta(numCerto)
+	barra.set_process(false)
 	timerRestart.start()
 	
 func mostraRepostaCerta(numCerto):
