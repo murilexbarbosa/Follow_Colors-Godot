@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=1]
+[gd_scene load_steps=21 format=1]
 
 [ext_resource path="res://scripts/main.gd" type="Script" id=1]
 [ext_resource path="res://assets/genius.png" type="Texture" id=2]
@@ -12,7 +12,10 @@
 [ext_resource path="res://sounds/sound3.ogg" type="AudioStream" id=10]
 [ext_resource path="res://sounds/sound4.ogg" type="AudioStream" id=11]
 [ext_resource path="res://animations/show_hide.tres" type="Animation" id=12]
-[ext_resource path="res://assets/background.png" type="Texture" id=13]
+[ext_resource path="res://scripts/barra.gd" type="Script" id=13]
+[ext_resource path="res://assets/barra.png" type="Texture" id=14]
+[ext_resource path="res://assets/barra_recipiente.png" type="Texture" id=15]
+[ext_resource path="res://assets/background.png" type="Texture" id=16]
 
 [sub_resource type="Animation" id=1]
 
@@ -281,6 +284,30 @@ z/z = 3
 texture = ExtResource( 7 )
 centered = false
 
+[node name="Barra" type="Node2D" parent="player/controle"]
+
+transform/pos = Vector2( 170.331, 37.0775 )
+transform/scale = Vector2( 1.07283, 1.24758 )
+script/script = ExtResource( 13 )
+
+[node name="barra" type="Sprite" parent="player/controle/Barra"]
+
+material/use_parent = true
+transform/pos = Vector2( -48.7947, -0.0119109 )
+transform/scale = Vector2( 2.61126, 2.51753 )
+texture = ExtResource( 14 )
+centered = false
+region = true
+region_rect = Rect2( 0, 0, 188, 23 )
+
+[node name="barra_recipiente" type="Sprite" parent="player/controle/Barra"]
+
+transform/pos = Vector2( 194.147, 28.9397 )
+transform/rot = -180.0
+transform/scale = Vector2( 2.55529, 2.12416 )
+texture = ExtResource( 15 )
+region_rect = Rect2( 0, 0, 188, 23 )
+
 [node name="BackgroundAnim" type="AnimationPlayer" parent="."]
 
 playback/process_mode = 1
@@ -294,9 +321,9 @@ autoplay = "background"
 
 [node name="Sprite" type="Sprite" parent="BackgroundAnim"]
 
-transform/pos = Vector2( 4, 3 )
+transform/pos = Vector2( -1.94232, 13.0701 )
 transform/scale = Vector2( 0.447034, 0.500729 )
-texture = ExtResource( 13 )
+texture = ExtResource( 16 )
 centered = false
 
 [node name="timerRestart" type="Timer" parent="."]

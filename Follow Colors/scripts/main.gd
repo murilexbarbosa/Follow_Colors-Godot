@@ -17,6 +17,8 @@ onready var animazul =  get_node("player/controle/AnimAzul")
 
 onready var timerRestart = get_node("timerRestart")
 
+onready var barra = get_node("player/controle/Barra")
+
 var sequenciaPC = []
 var sequenciaPlayer = []
 var listaThread = []
@@ -42,6 +44,7 @@ func _ready():
 	set_process(true)
 	set_process_input(true)
 	self.connect("perdeu",self,"perder")
+	barra.connect("perdeu_tempo",self,"perder") 
 	
 func _process(delta):
 	#print("ESTADO: "+str(estado))
@@ -170,6 +173,8 @@ func verificaResposta():
 		if sequenciaPlayer[tamanho] != sequenciaPC[tamanho]:
 			estado = PERDENDO
 			emit_signal("perdeu",sequenciaPC[tamanho])
+		else:
+			barra.add(1)
 		tamanho -= 1
 
 func verificaFinal():
