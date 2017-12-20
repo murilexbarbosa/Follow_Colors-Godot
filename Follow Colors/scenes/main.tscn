@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=1]
+[gd_scene load_steps=23 format=1]
 
 [ext_resource path="res://scripts/main.gd" type="Script" id=1]
 [ext_resource path="res://assets/genius.png" type="Texture" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://assets/barra_recipiente.png" type="Texture" id=15]
 [ext_resource path="res://assets/barra.png" type="Texture" id=16]
 [ext_resource path="res://sounds/sound_game.ogg" type="AudioStream" id=17]
+[ext_resource path="res://assets/font140.fnt" type="BitmapFont" id=18]
 
 [sub_resource type="Animation" id=1]
 
@@ -313,6 +314,7 @@ autostart = false
 
 [node name="Barra" type="Node2D" parent="."]
 
+editor/display_folded = true
 transform/pos = Vector2( 360, 100 )
 transform/scale = Vector2( 2, 2 )
 z/z = 2
@@ -339,6 +341,48 @@ stream/autoplay = true
 stream/paused = false
 stream/loop_restart_time = 0.0
 stream/buffering_ms = 500
+
+[node name="Control" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="Pontos" type="Label" parent="Control"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 301.0
+margin/top = 178.0
+margin/right = 426.0
+margin/bottom = 329.0
+custom_fonts/font = ExtResource( 18 )
+custom_colors/font_color = Color( 0.934078, 0.831914, 0, 1 )
+text = "0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="High" type="Label" parent="Control"]
+
+rect/scale = Vector2( 0.5, 0.5 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 640.0
+margin/top = 17.0
+margin/right = 765.0
+margin/bottom = 168.0
+custom_fonts/font = ExtResource( 18 )
+custom_colors/font_color = Color( 0.890706, 0.840627, 0, 1 )
+text = "0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 [connection signal="pressed" from="player/controle/btnvermelho" to="." method="_on_btnvermelho_pressed"]
 
