@@ -19,6 +19,8 @@ onready var timerRestart = get_node("timerRestart")
 
 onready var barra = get_node("Barra")
 
+onready var labelpontos = get_node("Control/Pontos")
+
 var sequenciaPC = []
 var sequenciaPlayer = []
 var listaThread = []
@@ -30,6 +32,13 @@ var ExecutandoTimer = true
 var _thread
 
 var tempoDelta = 0
+
+var pontos = 0
+var high = 0
+
+var save_file = File.new()
+var save_path = "user://savegame.save"
+var save_data = {"highscore":0}
 
 
 const JOGANDO = 1
@@ -45,6 +54,30 @@ func _ready():
 	set_process_input(true)
 	self.connect("perdeu",self,"perder")
 	barra.connect("perdeu_tempo",self,"perder") 
+	
+	if not save_file.file_exists(save_path):
+		create_save()
+	else:
+		read()
+		get_node("Control/High").set_text(str(high))
+		
+func create_save():
+	save_file.open(save_path, File.WRITE)
+	save_file.store_var(save_data)
+	save_file.close()
+	
+func save():
+	save_data["highscore"] = high
+	save_file.open(save_path, File.WRITE)
+	save_file.store_var(save_data)
+	save_file.close()
+	
+func read():
+	save_file.open(save_path, File.READ)
+	save_data = save_file.get_var()
+	save_file.close()
+	high = save_data["highscore"]
+	
 	
 func _process(delta):
 	#print("ESTADO: "+str(estado))
@@ -175,7 +208,15 @@ func verificaResposta():
 			emit_signal("perdeu",sequenciaPC[tamanho])
 		else:
 			barra.add(1)
+			
 		tamanho -= 1
+		
+	pontos += 1
+	if pontos > high:
+		high = pontos
+		get_node("Control/High").set_text(str(high))
+	labelpontos.set_text(str(pontos))
+
 
 func verificaFinal():
 	if (sequenciaPlayer.size() == sequenciaPC.size()) and (estado != PERDENDO):
@@ -185,6 +226,7 @@ func perder(numCerto):
 	estado = PERDENDO
 	print("perdeeuuuuU")
 	bloqueia_botoes()
+	save()
 	if numCerto >= 0:
 		mostraRepostaCerta(numCerto)
 	barra.set_process(false)
