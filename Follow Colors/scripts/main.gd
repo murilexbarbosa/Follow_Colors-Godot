@@ -1,5 +1,7 @@
 extends Node2D
 
+var packed_scene = load("res://scenes/menugame.tscn")
+
 onready var somvermelho = get_node("player/controle/SomVermelho")
 onready var somverde = get_node("player/controle/SomVerde")
 onready var somamarelo = get_node("player/controle/SomAmarelo")
@@ -20,6 +22,11 @@ onready var timerRestart = get_node("timerRestart")
 onready var barra = get_node("Barra")
 
 onready var labelpontos = get_node("Control/Pontos")
+
+onready var somerro = get_node("SoundError")
+
+onready var btnRestart = get_node("Btn_Options/btnRestart")
+onready var btnMenu = get_node("Btn_Options/btnMenu")
 
 var sequenciaPC = []
 var sequenciaPlayer = []
@@ -54,6 +61,9 @@ func _ready():
 	set_process_input(true)
 	self.connect("perdeu",self,"perder")
 	barra.connect("perdeu_tempo",self,"perder") 
+	
+	btnRestart.hide()
+	btnMenu.hide()
 	
 	if not save_file.file_exists(save_path):
 		create_save()
@@ -206,12 +216,14 @@ func verificaResposta():
 		if sequenciaPlayer[tamanho] != sequenciaPC[tamanho]:
 			estado = PERDENDO
 			emit_signal("perdeu",sequenciaPC[tamanho])
-		else:
-			barra.add(1)
+		#else:
+		#	barra.add(1)
 			
 		tamanho -= 1
 		
-	pontos += 1
+	if estado != PERDENDO:
+		pontos += 1
+		
 	if pontos > high:
 		high = pontos
 		get_node("Control/High").set_text(str(high))
@@ -221,16 +233,20 @@ func verificaResposta():
 func verificaFinal():
 	if (sequenciaPlayer.size() == sequenciaPC.size()) and (estado != PERDENDO):
 		estado = GERANDO 
+		barra.add(1)
 		
 func perder(numCerto):
 	estado = PERDENDO
-	print("perdeeuuuuU")
+	#print("perdeeuuuuU")
+	somerro.play()
 	bloqueia_botoes()
 	save()
 	if numCerto >= 0:
 		mostraRepostaCerta(numCerto)
 	barra.set_process(false)
-	timerRestart.start()
+	btnRestart.show()
+	btnMenu.show()
+	
 	
 func mostraRepostaCerta(numCerto):
 	if numCerto == 0:
@@ -244,3 +260,11 @@ func mostraRepostaCerta(numCerto):
 	
 func _on_timerRestart_timeout():
 	get_tree().reload_current_scene()
+
+
+func _on_btnRestart_pressed():
+	timerRestart.start()
+
+
+func _on_btnMenu_pressed():
+	get_tree().change_scene_to(packed_scene)

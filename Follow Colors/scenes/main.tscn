@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=1]
+[gd_scene load_steps=26 format=1]
 
 [ext_resource path="res://scripts/main.gd" type="Script" id=1]
 [ext_resource path="res://assets/genius.png" type="Texture" id=2]
@@ -18,6 +18,9 @@
 [ext_resource path="res://assets/barra.png" type="Texture" id=16]
 [ext_resource path="res://sounds/sound_game.ogg" type="AudioStream" id=17]
 [ext_resource path="res://assets/font140.fnt" type="BitmapFont" id=18]
+[ext_resource path="res://sounds/resposta_errada.ogg" type="AudioStream" id=19]
+[ext_resource path="res://assets/b_Restart.png" type="Texture" id=20]
+[ext_resource path="res://assets/b_No.png" type="Texture" id=21]
 
 [sub_resource type="Animation" id=1]
 
@@ -105,8 +108,8 @@ transform/scale = Vector2( 0.714286, 0.714286 )
 
 [node name="btnvermelho" type="TouchScreenButton" parent="player/controle"]
 
-transform/pos = Vector2( 467.476, 401.257 )
-transform/scale = Vector2( 0.71388, 0.71388 )
+transform/pos = Vector2( 439.476, 373.257 )
+transform/scale = Vector2( 0.9, 0.9 )
 z/z = 4
 normal = ExtResource( 3 )
 pressed = ExtResource( 4 )
@@ -120,8 +123,8 @@ visibility_mode = 0
 
 [node name="btnverde" type="TouchScreenButton" parent="player/controle"]
 
-transform/pos = Vector2( 149.453, 400.45 )
-transform/scale = Vector2( 0.71388, 0.71388 )
+transform/pos = Vector2( 126.453, 377.45 )
+transform/scale = Vector2( 0.9, 0.9 )
 z/z = 4
 normal = ExtResource( 3 )
 pressed = ExtResource( 5 )
@@ -135,8 +138,8 @@ visibility_mode = 0
 
 [node name="btnamarelo" type="TouchScreenButton" parent="player/controle"]
 
-transform/pos = Vector2( 148.362, 704.718 )
-transform/scale = Vector2( 0.71388, 0.71388 )
+transform/pos = Vector2( 128.362, 684.718 )
+transform/scale = Vector2( 0.9, 0.9 )
 z/z = 4
 normal = ExtResource( 3 )
 pressed = ExtResource( 6 )
@@ -150,8 +153,8 @@ visibility_mode = 0
 
 [node name="btnazul" type="TouchScreenButton" parent="player/controle"]
 
-transform/pos = Vector2( 461.409, 697.458 )
-transform/scale = Vector2( 0.71388, 0.71388 )
+transform/pos = Vector2( 441.409, 687.458 )
+transform/scale = Vector2( 0.9, 0.9 )
 z/z = 4
 normal = ExtResource( 3 )
 pressed = ExtResource( 7 )
@@ -289,6 +292,7 @@ centered = false
 
 [node name="BackgroundAnim" type="AnimationPlayer" parent="."]
 
+editor/display_folded = true
 playback/process_mode = 1
 playback/default_blend_time = 0.0
 root/root = NodePath("..")
@@ -300,15 +304,16 @@ autoplay = "background"
 
 [node name="Sprite" type="Sprite" parent="BackgroundAnim"]
 
+visibility/opacity = 0.2
 transform/pos = Vector2( 0.0576782, -0.528687 )
-transform/scale = Vector2( 0.449996, 0.500234 )
+transform/scale = Vector2( 0.449996, 0.516852 )
 texture = ExtResource( 13 )
 centered = false
 
 [node name="timerRestart" type="Timer" parent="."]
 
 process_mode = 1
-wait_time = 2.0
+wait_time = 0.3
 one_shot = false
 autostart = false
 
@@ -344,6 +349,7 @@ stream/buffering_ms = 500
 
 [node name="Control" type="CanvasLayer" parent="."]
 
+editor/display_folded = true
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -362,6 +368,7 @@ margin/bottom = 329.0
 custom_fonts/font = ExtResource( 18 )
 custom_colors/font_color = Color( 0.934078, 0.831914, 0, 1 )
 text = "0"
+align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
@@ -373,9 +380,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 640.0
+margin/left = 630.0
 margin/top = 17.0
-margin/right = 765.0
+margin/right = 755.0
 margin/bottom = 168.0
 custom_fonts/font = ExtResource( 18 )
 custom_colors/font_color = Color( 0.890706, 0.840627, 0, 1 )
@@ -383,6 +390,47 @@ text = "0"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+
+[node name="SoundError" type="StreamPlayer" parent="."]
+
+stream/stream = ExtResource( 19 )
+stream/play = false
+stream/loop = false
+stream/volume_db = 2.0
+stream/autoplay = false
+stream/paused = false
+stream/loop_restart_time = 0.0
+stream/buffering_ms = 500
+
+[node name="Btn_Options" type="Node2D" parent="."]
+
+z/z = 3
+
+[node name="btnRestart" type="TouchScreenButton" parent="Btn_Options"]
+
+transform/pos = Vector2( 130, 340 )
+normal = ExtResource( 20 )
+pressed = ExtResource( 20 )
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = ""
+visibility_mode = 0
+
+[node name="btnMenu" type="TouchScreenButton" parent="Btn_Options"]
+
+transform/pos = Vector2( 450, 340 )
+normal = ExtResource( 21 )
+pressed = ExtResource( 21 )
+bitmask = null
+shape = null
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = ""
+visibility_mode = 0
 
 [connection signal="pressed" from="player/controle/btnvermelho" to="." method="_on_btnvermelho_pressed"]
 
@@ -393,5 +441,9 @@ max_lines_visible = -1
 [connection signal="pressed" from="player/controle/btnazul" to="." method="_on_btnazul_pressed"]
 
 [connection signal="timeout" from="timerRestart" to="." method="_on_timerRestart_timeout"]
+
+[connection signal="pressed" from="Btn_Options/btnRestart" to="." method="_on_btnRestart_pressed"]
+
+[connection signal="pressed" from="Btn_Options/btnMenu" to="." method="_on_btnMenu_pressed"]
 
 

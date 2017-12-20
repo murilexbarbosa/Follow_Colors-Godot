@@ -12,7 +12,7 @@ func _ready():
 func _process(delta):
 	if (get_parent().estado == get_parent().JOGANDO):
 		if (perc > 0):
-			perc -= 0.12*delta
+			perc -= 0.10*delta
 			marc.set_region_rect(Rect2(0, 0, perc*188, 23))
 			marc.set_pos(Vector2(-(1-perc)*188/2, 0))
 		else:
